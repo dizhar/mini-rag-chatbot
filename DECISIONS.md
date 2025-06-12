@@ -81,7 +81,7 @@ mini-rag-chatbot/
 
 The app expects these environment variables:
 
-- `OPENAI_API_KEY`: Your OpenAI API key (required)
+- `OPENAI_API_KEY`: OpenAI API key (required)
 
 ## 🚨 Troubleshooting
 
@@ -105,7 +105,7 @@ Time spent: ~3 hours (within the test timeframe)
 
 ## 🌐 Live Demo
 
-**Demo URL**: [Add your deployment URL here]
+**Demo URL**: mini-rag-chatbot-axseel5nkomhn9nsdp2gje.streamlit.app
 
 ## 📋 Requirements Met
 
