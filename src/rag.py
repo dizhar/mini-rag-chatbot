@@ -12,19 +12,12 @@ load_dotenv()
 
 class RAGChatbot:
     def __init__(self):
-        # Set the API key directly for older versions
-        openai.api_key = os.getenv("OPENAI_API_KEY")
-        
-        # Try the new client format first, fallback to old format
-        try:
-            self.openai_client = openai.OpenAI(
-                api_key=os.getenv("OPENAI_API_KEY")
-            )
-            self.use_new_client = True
-        except Exception:
-            # Fallback to old openai library format
-            self.use_new_client = False
+        # Initialize OpenAI client (v1.0+ format)
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            raise ValueError("OPENAI_API_KEY not found in environment variables")
             
+        self.openai_client = openai.OpenAI(api_key=api_key)
         self.chunks = []
         self.embeddings = None
         self.metadata = []
@@ -46,26 +39,20 @@ class RAGChatbot:
         embeddings = []
         
         # Process in batches to avoid rate limits
-        batch_size = 100
+        batch_size = 50  # Reduced batch size for stability
         for i in range(0, len(texts), batch_size):
             batch = texts[i:i + batch_size]
             
-            if self.use_new_client:
-                # New OpenAI client format
+            try:
                 response = self.openai_client.embeddings.create(
                     model="text-embedding-ada-002",
                     input=batch
                 )
                 batch_embeddings = [item.embedding for item in response.data]
-            else:
-                # Old OpenAI library format
-                response = openai.Embedding.create(
-                    model="text-embedding-ada-002",
-                    input=batch
-                )
-                batch_embeddings = [item['embedding'] for item in response['data']]
-            
-            embeddings.extend(batch_embeddings)
+                embeddings.extend(batch_embeddings)
+            except Exception as e:
+                print(f"Error generating embeddings for batch {i//batch_size + 1}: {e}")
+                raise e
         
         return np.array(embeddings)
     
@@ -74,35 +61,33 @@ class RAGChatbot:
         if self.embeddings is None:
             return []
         
-        # Generate embedding for the query
-        if self.use_new_client:
+        try:
+            # Generate embedding for the query
             query_response = self.openai_client.embeddings.create(
                 model="text-embedding-ada-002",
                 input=[query]
             )
             query_embedding = np.array([query_response.data[0].embedding])
-        else:
-            query_response = openai.Embedding.create(
-                model="text-embedding-ada-002",
-                input=[query]
-            )
-            query_embedding = np.array([query_response['data'][0]['embedding']])
-        
-        # Calculate cosine similarities
-        similarities = cosine_similarity(query_embedding, self.embeddings)[0]
-        
-        # Get top k most similar chunks
-        top_indices = np.argsort(similarities)[::-1][:top_k]
-        
-        results = []
-        for idx in top_indices:
-            results.append((
-                self.chunks[idx],
-                self.metadata[idx],
-                similarities[idx]
-            ))
-        
-        return results
+            
+            # Calculate cosine similarities
+            similarities = cosine_similarity(query_embedding, self.embeddings)[0]
+            
+            # Get top k most similar chunks
+            top_indices = np.argsort(similarities)[::-1][:top_k]
+            
+            results = []
+            for idx in top_indices:
+                results.append((
+                    self.chunks[idx],
+                    self.metadata[idx],
+                    similarities[idx]
+                ))
+            
+            return results
+            
+        except Exception as e:
+            print(f"Error in search: {e}")
+            return []
     
     def generate_answer(self, query: str, relevant_chunks: List[Tuple[str, Dict, float]]) -> str:
         """Generate an answer using OpenAI with relevant context."""
@@ -124,8 +109,8 @@ Question: {query}
 
 Answer:"""
         
-        # Generate response
-        if self.use_new_client:
+        try:
+            # Generate response
             response = self.openai_client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[
@@ -135,16 +120,9 @@ Answer:"""
                 temperature=0.1
             )
             return response.choices[0].message.content.strip()
-        else:
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=[
-                    {"role": "user", "content": prompt}
-                ],
-                max_tokens=300,
-                temperature=0.1
-            )
-            return response.choices[0].message.content.strip()
+            
+        except Exception as e:
+            return f"Error generating answer: {e}"
     
     def ask(self, question: str) -> Dict:
         """Main method to ask a question and get an answer with sources."""
