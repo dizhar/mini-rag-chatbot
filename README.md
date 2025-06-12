@@ -71,6 +71,7 @@ mini-rag-chatbot/
 ├── .env.template          # API key template
 ├── requirements.txt       # Dependencies
 ├── Dockerfile            # Container setup
+├── rag_chatbot_architecture.svg # architecture design
 ├── README.md             # Setup instructions
 ├── DECISIONS.md          # Architecture decisions
 ├── venv/                 # Virtual environment (ignored)
