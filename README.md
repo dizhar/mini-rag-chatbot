@@ -110,7 +110,7 @@ Time spent: ~3 hours (within the test timeframe)
 
 ## 🌐 Live Demo
 
-**Demo URL**: mini-rag-chatbot-axseel5nkomhn9nsdp2gje..streamlit.app
+**Demo URL**: mini-rag-chatbot-axseel5nkomhn9nsdp2gje.streamlit.app
 
 ## 📋 Requirements Met
 
