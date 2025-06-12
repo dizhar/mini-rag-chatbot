@@ -1,0 +1,44 @@
+graph TD
+    A[3 PDFs] --> B[Parse to Text<br/>PyPDF2]
+    B --> C[Chunk Text<br/>Paragraph/Sentence Split]
+    C --> D[Generate Embeddings<br/>OpenAI API]
+    D --> E[Store In-Memory<br/>numpy arrays + metadata]
+    
+    F[User Question] --> G[Embed Question<br/>Same Model]
+    G --> H[Cosine Similarity<br/>Search]
+    E --> H
+    H --> I[Top 3-5 Chunks]
+    I --> J[Context + Question<br/>Prompt Template]
+    J --> K[LLM Call<br/>OpenAI API]
+    K --> L[Answer + Sources]
+    
+    M[Streamlit UI] --> F
+    L --> M
+    
+    subgraph "Required MVP"
+        A
+        B
+        C
+        D
+        E
+        F
+        G
+        H
+        I
+        J
+        K
+        L
+        M
+    end
+    
+    N[Bonus: Vector DB<br/>Pinecone/Chroma] -.-> E
+    O[Bonus: Advanced Chunking] -.-> C
+    P[Bonus: Streaming] -.-> K
+    
+    style A fill:#e1f5fe
+    style D fill:#f3e5f5
+    style K fill:#fff3e0
+    style M fill:#e8f5e8
+    style N fill:#ffebee
+    style O fill:#ffebee
+    style P fill:#ffebee
