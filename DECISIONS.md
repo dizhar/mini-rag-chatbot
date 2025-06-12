@@ -8,7 +8,7 @@ A simple Retrieval-Augmented Generation (RAG) chatbot that answers questions abo
 
 ```bash
 # 1. Clone and setup
-git clone <your-repo-url>
+git clone git@github.com:dizhar/mini-rag-chatbot.git
 cd mini-rag-chatbot
 pip install -r requirements.txt
 
