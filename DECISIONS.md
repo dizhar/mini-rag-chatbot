@@ -29,7 +29,7 @@ streamlit run src/app.py
 
 ```bash
 # 1. Clone repo and add PDFs to data/ folder
-git clone <your-repo-url>
+git clone git@github.com:dizhar/mini-rag-chatbot.git
 cd mini-rag-chatbot
 # Add your 3 PDFs to data/ folder
 

@@ -8,18 +8,18 @@ A simple Retrieval-Augmented Generation (RAG) chatbot that answers questions abo
 
 ```bash
 # 1. Clone and setup
-git clone <your-repo-url>
+git clone git@github.com:dizhar/mini-rag-chatbot.git
 cd mini-rag-chatbot
 pip install -r requirements.txt
 
 # 2. Add your OpenAI API key
 cp .env.template .env
-# Edit .env and add: OPENAI_API_KEY=your_key_here
+Edit .env and add: OPENAI_API_KEY=your_key_here
 
 # 3. Add the 3 PDF files to data/ folder:
-# - data/security_policy.pdf
-# - data/expense_policy.pdf
-# - data/remote_work_policy.pdf
+- data/security_policy.pdf
+- data/expense_policy.pdf
+- data/remote_work_policy.pdf
 
 # 4. Run the app
 streamlit run src/app.py
@@ -29,7 +29,7 @@ streamlit run src/app.py
 
 ```bash
 # 1. Clone repo and add PDFs to data/ folder
-git clone <your-repo-url>
+git clone git@github.com:dizhar/mini-rag-chatbot.git
 cd mini-rag-chatbot
 # Add your 3 PDFs to data/ folder
 
